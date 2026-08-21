@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main() {
+    char code[1000], word[100];
+    int i = 0, j;
+
+    printf("Enter the source code:\n");
+    fgets(code, sizeof(code), stdin);
+
+    while (code[i] != '\0') {
+
+        if (isspace(code[i])) {
+            i++;
+            continue;
+        }
+        if (code[i] == '/' && code[i + 1] == '/') {
+            while (code[i] != '\n' && code[i] != '\0')
+                i++;
+            continue;
+        }
+        if (code[i] == '/' && code[i + 1] == '*') {
+            i += 2;
+            while (!(code[i] == '*' && code[i + 1] == '/') && code[i] != '\0')
+                i++;
+            i += 2;
+            continue;
+        }
+
+        
+        if (isalpha(code[i])) {
+            j = 0;
+
+            while (isalnum(code[i]) || code[i] == '_')
+                word[j++] = code[i++];
+
+            word[j] = '\0';
+
+            if (!strcmp(word, "int") ||
+                !strcmp(word, "float") ||
+                !strcmp(word, "char") ||
+                !strcmp(word, "if") ||
+                !strcmp(word, "else") ||
+                !strcmp(word, "while") ||
+                !strcmp(word, "return"))
+                printf("%s -> KEYWORD\n", word);
+            else
+                printf("%s -> IDENTIFIER\n", word);
+
+            continue;
+        }
+        if (isdigit(code[i])) {
+            j = 0;
+
+            while (isdigit(code[i]))
+                word[j++] = code[i++];
+
+            word[j] = '\0';
+            printf("%s -> NUMBER\n", word);
+            continue;
+        }
+
+        if (strchr("+-*/=%<>!", code[i])) {
+            printf("%c -> OPERATOR\n", code[i]);
+            i++;
+            continue;
+        }
+
+        if (strchr(";,(){}", code[i])) {
+            printf("%c -> SPECIAL SYMBOL\n", code[i]);
+            i++;
+            continue;
+        }
+
+        i++;
+    }
+
+    return 0;
+}
