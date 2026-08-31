@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main()
+{
+    int n, i, num;
+    int positive = 0, negative = 0;
+
+    printf("Enter number of numbers: ");
+    scanf("%d", &n);
+
+    printf("Enter the numbers:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &num);
+
+        if (num > 0)
+        {
+            printf("%d is Positive\n", num);
+            positive++;
+        }
+        else if (num < 0)
+        {
+            printf("%d is Negative\n", num);
+            negative++;
+        }
+    }
+
+    printf("\nPositive numbers = %d\n", positive);
+    printf("Negative numbers = %d\n", negative);
+
+    return 0;
+}
