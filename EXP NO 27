@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+    char str[500];
+    int i = 0, j, capital;
+
+    printf("Enter the input:\n");
+    fgets(str, sizeof(str), stdin);
+
+    printf("\nCapital Words:\n");
+
+    while (str[i] != '\0')
+    {
+        while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
+            i++;
+
+        if (str[i] == '\0')
+            break;
+
+        j = 0;
+        capital = 1;
+
+        while (str[i] != ' ' && str[i] != '\n' &&
+               str[i] != '\t' && str[i] != '\0')
+        {
+            if (!isupper(str[i]))
+                capital = 0;
+
+            i++;
+            j++;
+        }
+
+        if (capital)
+        {
+            int start = i - j;
+
+            for (int k = start; k < i; k++)
+                printf("%c", str[k]);
+
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
