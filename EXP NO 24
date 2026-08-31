@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    int n, i, j, inside = 0;
+    char line[500];
+
+    printf("Enter number of lines: ");
+    scanf("%d", &n);
+    getchar();
+
+    printf("Enter HTML code:\n");
+
+    printf("\nHTML Tags:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        fgets(line, sizeof(line), stdin);
+
+        for (j = 0; line[j] != '\0'; j++)
+        {
+            if (line[j] == '<')
+            {
+                inside = 1;
+                printf("<");
+            }
+            else if (inside)
+            {
+                printf("%c", line[j]);
+
+                if (line[j] == '>')
+                    inside = 0;
+            }
+        }
+    }
+
+    return 0;
+}
