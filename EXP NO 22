@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main()
+{
+    int n, i, j;
+    char str[500];
+
+    printf("Enter number of lines: ");
+    scanf("%d", &n);
+    getchar();
+
+    printf("Enter the C program:\n");
+
+    printf("\nConstants:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        fgets(str, sizeof(str), stdin);
+
+        for (j = 0; str[j] != '\0'; j++)
+        {
+            if (isdigit(str[j]))
+            {
+                while (isdigit(str[j]) || str[j] == '.')
+                {
+                    printf("%c", str[j]);
+                    j++;
+                }
+                printf("\n");
+                j--;
+            }
+        }
+    }
+
+    return 0;
+}
