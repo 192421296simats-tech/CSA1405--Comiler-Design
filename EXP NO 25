@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main()
+{
+    int n, i;
+    char line[500];
+
+    printf("Enter number of lines: ");
+    scanf("%d", &n);
+    getchar();
+
+    printf("Enter the C program:\n");
+
+    printf("\nNumbered C Program:\n");
+
+    for (i = 1; i <= n; i++)
+    {
+        fgets(line, sizeof(line), stdin);
+        printf("%d\t%s", i, line);
+    }
+
+    return 0;
+}
