@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    int n, i, j;
+    int comments = 0;
+    int inBlock = 0;
+    char line[500];
+
+    printf("Enter number of lines: ");
+    scanf("%d", &n);
+    getchar();
+
+    printf("Enter the C program:\n");
+
+    printf("\nProgram after removing comments:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        fgets(line, sizeof(line), stdin);
+
+        for (j = 0; line[j] != '\0'; j++)
+        {
+            if (!inBlock && line[j] == '/' && line[j + 1] == '/')
+            {
+                comments++;
+                break;
+            }
+
+            if (!inBlock && line[j] == '/' && line[j + 1] == '*')
+            {
+                comments++;
+                inBlock = 1;
+                j++;
+                continue;
+            }
+
+            if (inBlock && line[j] == '*' && line[j + 1] == '/')
+            {
+                inBlock = 0;
+                j++;
+                continue;
+            }
+
+            if (!inBlock)
+                putchar(line[j]);
+        }
+    }
+
+    printf("\nNumber of comment lines = %d\n", comments);
+
+    return 0;
+}
