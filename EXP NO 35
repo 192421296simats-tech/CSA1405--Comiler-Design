@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+    char str[500], word[100];
+    int i = 0, j;
+
+    printf("Enter a statement: ");
+    fgets(str, sizeof(str), stdin);
+
+    printf("\nWords and Numbers:\n");
+
+    while (str[i] != '\0')
+    {
+        if (isalpha(str[i]))
+        {
+            j = 0;
+
+            while (isalpha(str[i]))
+                word[j++] = str[i++];
+
+            word[j] = '\0';
+
+            printf("Word   : %s\n", word);
+        }
+        else if (isdigit(str[i]))
+        {
+            j = 0;
+
+            while (isdigit(str[i]))
+                word[j++] = str[i++];
+
+            word[j] = '\0';
+
+            printf("Number : %s\n", word);
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    return 0;
+}
