@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX 20
+
+char lhs[MAX];
+char rhs[MAX][MAX];
+int n;
+char leading[MAX][MAX];
+int count[MAX];
+
+void add(int x, char c) {
+    int i;
+
+    for (i = 0; i < count[x]; i++) {
+        if (leading[x][i] == c)
+            return;
+    }
+
+    leading[x][count[x]++] = c;
+}
+
+int indexOf(char c) {
+    int i;
+
+    for (i = 0; i < n; i++) {
+        if (lhs[i] == c)
+            return i;
+    }
+
+    return -1;
+}
+
+int main() {
+    int i, j, changed = 1;
+    int x;
+    char first, second;
+
+    printf("Enter number of productions: ");
+    scanf("%d", &n);
+
+    printf("Enter productions without spaces:\n");
+
+    for (i = 0; i < n; i++) {
+        scanf(" %c=%s", &lhs[i], rhs[i]);
+        count[i] = 0;
+    }
+
+    while (changed) {
+        changed = 0;
+
+        for (i = 0; i < n; i++) {
+            first = rhs[i][0];
+
+            if (!isupper(first)) {
+                int old = count[i];
+                add(i, first);
+                if (count[i] > old)
+                    changed = 1;
+            }
+            else {
+                x = indexOf(first);
+
+                if (x != -1) {
+                    for (j = 0; j < count[x]; j++) {
+                        int old = count[i];
+                        add(i, leading[x][j]);
+                        if (count[i] > old)
+                            changed = 1;
+                    }
+                }
+
+                second = rhs[i][1];
+
+                if (second != '\0' && !isupper(second)) {
+                    int old = count[i];
+                    add(i, second);
+                    if (count[i] > old)
+                        changed = 1;
+                }
+            }
+        }
+    }
+
+    printf("\nLEADING sets:\n");
+
+    for (i = 0; i < n; i++) {
+        printf("LEADING(%c) = { ", lhs[i]);
+
+        for (j = 0; j < count[i]; j++) {
+            printf("%c", leading[i][j]);
+
+            if (j < count[i] - 1)
+                printf(", ");
+        }
+
+        printf(" }\n");
+    }
+
+    return 0;
+}
