@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char nt;
+    int n, i, j, pos = 0;
+    char prod[10][50];
+    char prefix[50], suffix[10][50];
+
+    printf("Enter the non-terminal: ");
+    scanf(" %c", &nt);
+
+    printf("Enter number of productions: ");
+    scanf("%d", &n);
+
+    printf("Enter productions (without spaces):\n");
+    for (i = 0; i < n; i++)
+        scanf("%s", prod[i]);
+
+    /* Find common prefix */
+    strcpy(prefix, prod[0]);
+
+    for (i = 1; i < n; i++) {
+        j = 0;
+
+        while (prefix[j] && prod[i][j] &&
+               prefix[j] == prod[i][j]) {
+            j++;
+        }
+
+        prefix[j] = '\0';
+    }
+
+    /* Check for left factoring */
+    if (strlen(prefix) == 0 || n == 1) {
+        printf("\nNo left factoring required.\n");
+        return 0;
+    }
+
+    /* Get remaining parts */
+    for (i = 0; i < n; i++) {
+        strcpy(suffix[i], prod[i] + strlen(prefix));
+    }
+
+    printf("\nAfter eliminating left factoring:\n");
+
+    printf("%c -> %s%c'\n", nt, prefix, nt);
+
+    printf("%c' -> ", nt);
+    for (i = 0; i < n; i++) {
+        if (strlen(suffix[i]) == 0)
+            printf("epsilon");
+        else
+            printf("%s", suffix[i]);
+
+        if (i < n - 1)
+            printf(" | ");
+    }
+
+    printf("\n");
+
+    return 0;
+}
