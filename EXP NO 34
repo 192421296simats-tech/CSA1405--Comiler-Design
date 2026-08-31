@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int isKeyword(char str[])
+{
+    char keywords[][10] = {
+        "int", "float", "char", "double", "if",
+        "else", "for", "while", "do", "return",
+        "void", "break", "continue"
+    };
+
+    int i;
+
+    for (i = 0; i < 13; i++)
+    {
+        if (strcmp(str, keywords[i]) == 0)
+            return 1;
+    }
+
+    return 0;
+}
+
+int main()
+{
+    char str[500], word[50];
+    int i = 0, j;
+
+    printf("Enter a C statement:\n");
+    fgets(str, sizeof(str), stdin);
+
+    printf("\nKeywords:\n");
+
+    i = 0;
+    while (str[i] != '\0')
+    {
+        if (isalpha(str[i]) || str[i] == '_')
+        {
+            j = 0;
+
+            while (isalnum(str[i]) || str[i] == '_')
+                word[j++] = str[i++];
+
+            word[j] = '\0';
+
+            if (isKeyword(word))
+                printf("%s\n", word);
+        }
+        else
+            i++;
+    }
+
+    printf("\nIdentifiers:\n");
+
+    i = 0;
+    while (str[i] != '\0')
+    {
+        if (isalpha(str[i]) || str[i] == '_')
+        {
+            j = 0;
+
+            while (isalnum(str[i]) || str[i] == '_')
+                word[j++] = str[i++];
+
+            word[j] = '\0';
+
+            if (!isKeyword(word))
+                printf("%s\n", word);
+        }
+        else
+            i++;
+    }
+
+    return 0;
+}
