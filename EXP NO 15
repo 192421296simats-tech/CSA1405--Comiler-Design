@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <string.h>
+
+char stack[100], input[100];
+int top = -1, pos = 0;
+
+char precedence(char a, char b) {
+    if (a == 'i' && b == 'i') return ' ';
+    if (a == 'i' && (b == '+' || b == '*' || b == ')' || b == '$')) return '>';
+    if ((a == '+' || a == '*') && b == 'i') return '<';
+    if (a == '+' && b == '+') return '>';
+    if (a == '+' && b == '*') return '<';
+    if (a == '+' && b == ')') return '>';
+    if (a == '+' && b == '$') return '>';
+    if (a == '*' && b == '+') return '>';
+    if (a == '*' && b == '*') return '>';
+    if (a == '*' && b == ')') return '>';
+    if (a == '*' && b == '$') return '>';
+    if (a == '(' && b == 'i') return '<';
+    if (a == '(' && b == '(') return '<';
+    if (a == '(' && b == ')') return '=';
+    if (a == ')' && b == '+') return '>';
+    if (a == ')' && b == '*') return '>';
+    if (a == ')' && b == ')') return '>';
+    if (a == ')' && b == '$') return '>';
+    if (a == '$' && b == 'i') return '<';
+    if (a == '$' && b == '(') return '<';
+    if (a == '$' && b == '$') return '=';
+    return ' ';
+}
+
+char topTerminal() {
+    int i;
+    for (i = top; i >= 0; i--)
+        if (stack[i] == 'i' || stack[i] == '+' ||
+            stack[i] == '*' || stack[i] == '(' ||
+            stack[i] == ')' || stack[i] == '$')
+            return stack[i];
+    return '$';
+}
+
+int reduce() {
+    if (top >= 0 && stack[top] == 'i') {
+        stack[top] = 'E';
+        return 1;
+    }
+
+    if (top >= 2 && stack[top-2] == '(' &&
+        stack[top-1] == 'E' && stack[top] == ')') {
+        top -= 2;
+        stack[top] = 'E';
+        return 1;
+    }
+
+    if (top >= 2 && stack[top-2] == 'E' &&
+        (stack[top-1] == '+' || stack[top-1] == '*') &&
+        stack[top] == 'E') {
+        top -= 2;
+        stack[top] = 'E';
+        return 1;
+    }
+
+    return 0;
+}
+
+int main() {
+    char a, b;
+
+    printf("Enter the input string: ");
+    scanf("%s", input);
+
+    strcat(input, "$");
+
+    stack[++top] = '$';
+
+    printf("\nStack\tInput\tAction\n");
+
+    while (1) {
+        a = topTerminal();
+        b = input[pos];
+
+        if (a == '$' && b == '$')
+            break;
+
+        if (precedence(a, b) == '<' || precedence(a, b) == '=') {
+            stack[++top] = b;
+            pos++;
+            stack[top + 1] = '\0';
+
+            printf("%s\t%s\tShift\n", stack, input + pos);
+        }
+        else if (precedence(a, b) == '>') {
+            if (reduce()) {
+                stack[top + 1] = '\0';
+                printf("%s\t%s\tReduce\n", stack, input + pos);
+            }
+            else {
+                printf("\nString is REJECTED\n");
+                return 0;
+            }
+        }
+        else {
+            printf("\nString is REJECTED\n");
+            return 0;
+        }
+    }
+
+    if (top == 1 && stack[1] == 'E')
+        printf("\nString is ACCEPTED\n");
+    else
+        printf("\nString is REJECTED\n");
+
+    return 0;
+}
