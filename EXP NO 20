@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX 20
+
+char lhs[MAX];
+char rhs[MAX][MAX];
+char trailing[MAX][MAX];
+int n, count[MAX];
+
+int indexOf(char c) {
+    int i;
+    for (i = 0; i < n; i++)
+        if (lhs[i] == c)
+            return i;
+    return -1;
+}
+
+void add(int x, char c) {
+    int i;
+
+    for (i = 0; i < count[x]; i++)
+        if (trailing[x][i] == c)
+            return;
+
+    trailing[x][count[x]++] = c;
+}
+
+int main() {
+    int i, j, x, changed = 1;
+    char last, secondLast;
+
+    printf("Enter number of productions: ");
+    scanf("%d", &n);
+
+    printf("Enter productions without spaces:\n");
+
+    for (i = 0; i < n; i++) {
+        scanf(" %c=%s", &lhs[i], rhs[i]);
+        count[i] = 0;
+    }
+
+    while (changed) {
+        changed = 0;
+
+        for (i = 0; i < n; i++) {
+            int len = strlen(rhs[i]);
+
+            last = rhs[i][len - 1];
+
+            if (!isupper(last)) {
+                int old = count[i];
+                add(i, last);
+
+                if (count[i] > old)
+                    changed = 1;
+            }
+            else {
+                x = indexOf(last);
+
+                if (x != -1) {
+                    for (j = 0; j < count[x]; j++) {
+                        int old = count[i];
+                        add(i, trailing[x][j]);
+
+                        if (count[i] > old)
+                            changed = 1;
+                    }
+                }
+
+                if (len >= 2) {
+                    secondLast = rhs[i][len - 2];
+
+                    if (!isupper(secondLast)) {
+                        int old = count[i];
+                        add(i, secondLast);
+
+                        if (count[i] > old)
+                            changed = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    printf("\nTRAILING sets:\n");
+
+    for (i = 0; i < n; i++) {
+        printf("TRAILING(%c) = { ", lhs[i]);
+
+        for (j = 0; j < count[i]; j++) {
+            printf("%c", trailing[i][j]);
+
+            if (j < count[i] - 1)
+                printf(", ");
+        }
+
+        printf(" }\n");
+    }
+
+    return 0;
+}
