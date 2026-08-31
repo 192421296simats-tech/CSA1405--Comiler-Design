@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    int n, i;
+    char text[1000];
+    int characters = 0, words = 0, lines = 1;
+    int inWord = 0;
+
+    printf("Enter number of lines: ");
+    scanf("%d", &n);
+    getchar();
+
+    printf("Enter the text:\n");
+
+    for (i = 0; i < n; i++) {
+        fgets(text, sizeof(text), stdin);
+
+        int j = 0;
+
+        while (text[j] != '\0') {
+            characters++;
+
+            if (text[j] == '\n')
+                lines++;
+
+            if (isspace(text[j])) {
+                inWord = 0;
+            } else if (inWord == 0) {
+                words++;
+                inWord = 1;
+            }
+
+            j++;
+        }
+
+        inWord = 0;
+    }
+
+    if (lines > 1)
+        lines--;
+
+    printf("\nNumber of Characters: %d\n", characters);
+    printf("Number of Words: %d\n", words);
+    printf("Number of Lines: %d\n", lines);
+
+    return 0;
+}
